@@ -39,6 +39,9 @@
     case '/signin':
       require __DIR__ . '/views/signin.php';
       break;
+    case '/signup':
+      require __DIR__ . '/views/signup.php';
+      break;
     default:
       require __DIR__ . '/views/404.php';
       break;

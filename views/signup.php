@@ -52,12 +52,14 @@
                             $mail = $_POST['email'];
                             $psw = md5($_POST['password']);
 
+                            echo $psw;
+
                             $database = new DataSource();
 
                             var_dump($database->database->query("SELECT * FROM `user` WHERE email = '$mail';"));
 
                             $result = $database->createUser($mail, $psw, $uname, $name);
-                            echo "result = ";
+                            echo $result;
                         }
                     }
                     ?>

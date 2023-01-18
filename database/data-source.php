@@ -19,15 +19,12 @@ class DataSource
   public function validateUser(string $email, string $password)
   {
     $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
-    return $result["password"] === $password ? $result : null;
+    return $result["password"] === md5($password) ? $result : null;
   }
 
   public function createUser(string $email, string $password, string $firstName, string $lastName)
   {
-    // $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';");
-    // var_dump($result);
-    // return $result;
-
-    echo 'zizi';
+    $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
+    return $result;
   }
 }

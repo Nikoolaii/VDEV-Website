@@ -36,7 +36,7 @@ include_once "./controllers/user.php";
         <?php else : ?>
           <h1 class="py-2 px-3 font-semibold">Bonjour <?= $user["first_name"] ?></h1>
 
-          <a href="/" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Se déconnecter</a>
+          <a href="./controllers/logout.php" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Se déconnecter</a>
         <?php endif; ?>
       </div>
     </div>

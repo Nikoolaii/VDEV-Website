@@ -1,4 +1,4 @@
-(function profilToggle() {
+function profilToggle() {
   const profileMenu = document.getElementById('appbar-profile-menu')
   const burgerMenu = document.getElementById('appbar-burger-menu')
 

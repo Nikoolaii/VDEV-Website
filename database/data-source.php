@@ -24,19 +24,21 @@ class DataSource
 
   public function createUser(string $email, string $password, string $firstName, string $lastName)
   {
-    $result = $this->database->query("INSERT INTO `user` (email, password, first_name, last_name) VALUES ('$email', '$password', '$firstName', '$lastName');");
-    echo $result;
-    return $result;
+
+    $req = $this->database->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (':email', ':password', ':firstName', ':lastName', 0);");
+    $req->bindValue(':email', $email, PDO::PARAM_STR);
+    $req->bindValue(':password', $password, PDO::PARAM_STR);
+    $req->bindValue(':firstName', $firstName, PDO::PARAM_STR);
+    $req->bindValue(':lastName', $lastName, PDO::PARAM_STR);
+    $req->execute();
   }
 
   public function userAlreadyExist(string $email)
   {
-    $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
-    if (!$result == false) {
-      return false;
-    } else {
-      return true;
-    }
+    $req = $this->database->prepare("SELECT * FROM user WHERE email = ':email';");
+    $req->bindValue(':email', $email, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
   }
 
   public function collectRegion()
@@ -45,10 +47,20 @@ class DataSource
     return $result;
   }
 
-  public function collectTraversee(string $regionID)
+  public function collectLiaison(string $regionID)
   {
-    $req = $this->database->prepare("SELECT * FROM `traversee` WHERE code = :id");
+    $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
+    FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
+    LEFT JOIN  port p2 ON p2.id = l.arriveeID WHERE secteurId = :id;");
     $req->bindValue(':id', $regionID, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
+
+  public function collectTraversee(string $liaisonID)
+  {
+    $req = $this->database->prepare("SELECT * FROM traversee WHERE liaisonId = :id AND date > CURRENT_DATE;");
+    $req->bindValue(':id', $liaisonID, PDO::PARAM_INT);
     $req->execute();
     return $req->fetchAll(PDO::FETCH_OBJ);
   }

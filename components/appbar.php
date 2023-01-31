@@ -3,6 +3,10 @@ $links = [
   [
     "name" => "Reservation",
     "link" => "/reservation"
+  ],
+  [
+    "name" => "Liaisons",
+    "link" => "/liaisons"
   ]
 ];
 
@@ -35,6 +39,9 @@ include_once "./controllers/user.php";
           <a href="/signup" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-blue-500/70 outline-none focus-visible:bg-blue-500/70">S'inscrire</a>
         <?php else : ?>
           <h1 class="py-2 px-3 font-semibold">Bonjour <?= $user["first_name"] ?></h1>
+          <?php if ($user["admin"] == 1) : ?>
+            <a href="/admin" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Pannel admin</a>
+          <?php endif; ?>
 
           <a href="./controllers/logout.php" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Se déconnecter</a>
         <?php endif; ?>

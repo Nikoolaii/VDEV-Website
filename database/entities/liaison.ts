@@ -18,6 +18,9 @@ export class Liaison {
   @Column()
   distance: number
 
+  @Column()
+  imglink: string
+
   @ManyToOne(() => Secteur, (secteur) => secteur.liaisons)
   @JoinColumn()
   secteur: Secteur

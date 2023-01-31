@@ -15,7 +15,7 @@ export class Traversee {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ type: 'date' })
   date: Date
 
   @Column({ type: 'time' })

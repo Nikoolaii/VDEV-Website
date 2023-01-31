@@ -32,6 +32,33 @@ export class Reservation {
   @Column()
   quantite: number
 
+  @Column()
+  nbAdulte: number
+
+  @Column()
+  nbJunior: number
+
+  @Column()
+  nbEnfant: number
+
+  @Column()
+  nbFourgon: number
+
+  @Column()
+  nbCC: number
+
+  @Column()
+  nbCamion: number
+
+  @Column()
+  nbVoiture4: number
+
+  @Column()
+  nbVoiture5: number
+
+  @Column()
+  nbAnimaux: number
+
   @ManyToOne(() => Type, (type) => type.reservations)
   @JoinColumn()
   type: Type

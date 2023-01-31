@@ -42,6 +42,15 @@
     case '/signup':
       require __DIR__ . '/views/signup.php';
       break;
+    case '/liaisons':
+      require __DIR__ . '/views/traversee.php';
+      break;
+    case '/tarif':
+      require __DIR__ . '/views/tarif.php';
+      break;
+    case '/admin':
+      require __DIR__ . '/views/tarif.php';
+      break;
     default:
       require __DIR__ . '/views/404.php';
       break;

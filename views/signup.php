@@ -48,20 +48,12 @@
                             include "../database/data-source.php";
 
                             $fname = $_POST['first_name'];
-                            $lame = $_POST['last_name'];
+                            $lname = $_POST['last_name'];
                             $mail = $_POST['email'];
                             $psw = md5($_POST['password']);
 
                             $database = new DataSource();
-
-                            $result = $database->userAlreadyExist($mail);
-                            if ($result == true) {
-                                echo "aaaa";
-                                $result = $database->createUser($mail, $psw, $fname, $lname);
-                                echo $result;
-                            } else {
-                                echo '<p style="color:red">L\'adresse mail est déjà utilisée';
-                            }
+                            $database->createUser($mail, $psw, $fname, $lname);
                         }
                     }
                     ?>

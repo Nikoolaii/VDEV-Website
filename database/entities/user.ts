@@ -18,6 +18,9 @@ export class User {
   @Column({ name: 'last_name' })
   lastName: string
 
+  @Column()
+  admin: boolean
+
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[]
 }

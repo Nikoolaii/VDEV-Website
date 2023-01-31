@@ -45,21 +45,23 @@
                             echo '<br>- Un nombre';
                             echo '<br>- Un caractère spécial';
                         } else {
-                            include "./database/data-source.php";
+                            include "../database/data-source.php";
 
-                            $uname = $_POST['username'];
-                            $name = $_POST['name'];
+                            $fname = $_POST['first_name'];
+                            $lame = $_POST['last_name'];
                             $mail = $_POST['email'];
                             $psw = md5($_POST['password']);
 
-                            echo $psw;
-
                             $database = new DataSource();
 
-                            var_dump($database->database->query("SELECT * FROM `user` WHERE email = '$mail';"));
-
-                            $result = $database->createUser($mail, $psw, $uname, $name);
-                            echo $result;
+                            $result = $database->userAlreadyExist($mail);
+                            if ($result == true) {
+                                echo "aaaa";
+                                $result = $database->createUser($mail, $psw, $fname, $lname);
+                                echo $result;
+                            } else {
+                                echo '<p style="color:red">L\'adresse mail est déjà utilisée';
+                            }
                         }
                     }
                     ?>

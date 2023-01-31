@@ -1,6 +1,29 @@
 function dispo() {
-  const reservation = document.getElementById('dispo')
+  const reservation = document.getElementById('trajetdispo')
+  const traversee = document.getElementById('traversees')
+  const value = traversee.value
   reservation.classList.remove('hidden')
+
+  const Datas = new FormData()
+  Datas.append('id', value)
+
+  // eslint-disable-next-line no-undef
+  const request = $.ajax({
+    type: 'POST',
+    url: '../database/ajax/collectTraversee.php',
+    data: Datas,
+    dataType: 'json',
+    timeout: 120000, // 2 Minutes
+    cache: false,
+    contentType: false,
+    processData: false
+  })
+  request.done(function (output) {
+    alert(output)
+  })
+  request.fail(function (textStatus) {
+    alert('c kc ' + textStatus)
+  })
 }
 
 function howManyPets(ev) {

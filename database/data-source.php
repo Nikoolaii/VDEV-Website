@@ -24,7 +24,32 @@ class DataSource
 
   public function createUser(string $email, string $password, string $firstName, string $lastName)
   {
-    $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
+    $result = $this->database->query("INSERT INTO `user` (email, password, first_name, last_name) VALUES ('$email', '$password', '$firstName', '$lastName');");
+    echo $result;
     return $result;
+  }
+
+  public function userAlreadyExist(string $email)
+  {
+    $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
+    if (!$result == false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public function collectRegion()
+  {
+    $result = $this->database->query("SELECT * FROM `secteur`;")->fetchAll();
+    return $result;
+  }
+
+  public function collectTraversee(string $regionID)
+  {
+    $req = $this->database->prepare("SELECT * FROM `traversee` WHERE code = :id");
+    $req->bindValue(':id', $regionID, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
   }
 }

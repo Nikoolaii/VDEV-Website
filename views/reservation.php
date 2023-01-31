@@ -1,4 +1,5 @@
-<script src="/scripts/reservation.js"></script>
+<script src="./scripts/reservation.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <div class="flex items-center justify-center p-8 z-10">
     <div class="mx-auto w-full max-w-[550px]">
         <form method="POST">
@@ -46,28 +47,36 @@
             </div>
             <div class="mb-5">
                 <label for="trajet" class="block mb-3 text-base font-medium text-[#07074D]">
-                    Les destinations
+                    Les régions
                 </label>
                 <select id="traversees" onchange="dispo()" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-                    <option selected disabled>Choisissez une traversée</option>
-                    <option value="Ile-de-Ré">Ile-de-Ré</option>
-                    <option value="Ile-de-Houat">Ile-de-Houat</option>
-                    <option value="Belle-Ile">Belle-Ile</option>
+                    <option selected disabled>Choisissez une région</option>
+                    <?php
+                    include "./database/data-source.php";
+                    $database = new DataSource();
+                    $result = $database->collectRegion();
+
+                    foreach ($result as $value) {
+                        echo "<option value=" . $value['id_secteur'] . ">" . $value['libelle'] . "</option>";
+                    }
+                    ?>
                 </select>
             </div>
-            <div id="dispo" class="mb-5 hidden">
-                <label for="trajet" class="block mb-3 text-base font-medium text-[#07074D]">
-                    Date souhaitée
-                </label>
-                <input type="date" name="guest" id="guest" class="w-full mb-3 appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+            <div id="trajetdispo" class="mb-5 hidden">
                 <label for="trajet" class="block mb-3 text-base font-medium text-[#07074D]">
                     Traversées disponibles
                 </label>
                 <select id="traversees" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-                    <option selected>Choisissez une traversée</option>
-                    <option value="Ile-de-Ré">Ile-de-Ré</option>
-                    <option value="Ile-de-Houat">Ile-de-Houat</option>
-                    <option value="Belle-Ile">Belle-Ile</option>
+                    <option selected disabled>Choisissez une traversée</option>
+                    <?php
+                    include "./database/data-source.php";
+                    $database = new DataSource();
+                    $result = $database->collectTraversee($idRegion);
+                    
+                    foreach ($result as $value) {
+                        echo "<option value=" . $value['id_traversee'] . ">" . $value['libelle'] . "</option>";
+                    }
+                    ?>
                 </select>
             </div>
             <div class="mb-5">

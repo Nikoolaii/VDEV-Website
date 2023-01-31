@@ -7,6 +7,7 @@ import {
 } from 'typeorm'
 import { Type } from './type'
 import { Traversee } from './traversee'
+import { User } from './user'
 
 @Entity()
 export class Reservation {
@@ -38,4 +39,8 @@ export class Reservation {
   @ManyToOne(() => Traversee, (traversee) => traversee.reservations)
   @JoinColumn()
   traversee: Traversee
+
+  @ManyToOne(() => User, (user) => user.reservations)
+  @JoinColumn()
+  user: User
 }

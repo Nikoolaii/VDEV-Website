@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Categorie } from './categorie'
+import { Traversee } from './traversee'
 
 @Entity()
 export class Bateau {
@@ -16,4 +18,10 @@ export class Bateau {
 
   @Column()
   vitesse: number
+
+  @OneToMany(() => Categorie, (categorie) => categorie.bateau)
+  categories: Categorie[]
+
+  @OneToMany(() => Traversee, (traversee) => traversee.bateau)
+  traversees: Traversee[]
 }

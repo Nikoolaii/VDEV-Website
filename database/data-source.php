@@ -6,7 +6,7 @@ class DataSource
   function __construct()
   {
     try {
-      $this->database = new PDO("mysql:host=localhost;dbname=VDEV", "root", "root");
+      $this->database = new PDO("mysql:host=localhost;port=5432;dbname=vdev", "root", "root");
       $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
       $this->database = null;

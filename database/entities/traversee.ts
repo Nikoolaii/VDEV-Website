@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from 'typeorm'
+import { Bateau } from './bateau'
+import { Reservation } from './reservation'
+import { Liaison } from './liaison'
 
 @Entity()
 export class Traversee {
@@ -10,4 +20,15 @@ export class Traversee {
 
   @Column({ type: 'time' })
   heure: Date
+
+  @ManyToOne(() => Bateau, (bateau) => bateau.traversees)
+  @JoinColumn()
+  bateau: Bateau
+
+  @OneToMany(() => Reservation, (reservation) => reservation.traversee)
+  reservations: Reservation[]
+
+  @ManyToOne(() => Liaison, (liaison) => liaison.traversees)
+  @JoinColumn()
+  liaison: Liaison
 }

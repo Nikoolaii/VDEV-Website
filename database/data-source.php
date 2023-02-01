@@ -25,7 +25,7 @@ class DataSource
   public function createUser(string $email, string $password, string $firstName, string $lastName)
   {
 
-    $req = $this->database->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (':email', ':password', ':firstName', ':lastName', 0);");
+    $req = $this->database->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (:email, :password, :firstName, :lastName, 0);");
     $req->bindValue(':email', $email, PDO::PARAM_STR);
     $req->bindValue(':password', $password, PDO::PARAM_STR);
     $req->bindValue(':firstName', $firstName, PDO::PARAM_STR);

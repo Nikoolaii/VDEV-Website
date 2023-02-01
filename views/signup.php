@@ -5,7 +5,7 @@
                 <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                     Création de compte
                 </h1>
-                <form class="space-y-4 md:space-y-6" action="./controllers/signup.php" method="post">
+                <form class="space-y-4 md:space-y-6" action="" method="post">
                     <div class="flex">
                         <div class="w-1/2 pr-1">
                             <label for="first-name" class="block mb-2 text-sm font-medium text-gray-900 ">Prénom</label>
@@ -31,13 +31,30 @@
                         Vous avez un compte ? <a href="/login" class="font-medium text-primary-600 hover:underline">Connexion</a>
                     </p>
                     <?php
-                    if (isset($_GET['error1'])) {
-                        echo '<p style="color:red">Le mot de passe ne respecte pas les critères:';
-                        echo '<br>- 12 caractères minimum';
-                        echo '<br>- Une majuscule';
-                        echo '<br>- Une minuscule';
-                        echo '<br>- Un nombre';
-                        echo '<br>- Un caractère spécial';
+                    if (isset($_POST['first-name']) && isset($_POST['last-name']) && isset($_POST['email']) && isset($_POST['password'])) {
+                        $uppercase = preg_match('@[A-Z]@', $_POST['password']);
+                        $lowercase = preg_match('@[a-z]@', $_POST['password']);
+                        $number    = preg_match('@[0-9]@', $_POST['password']);
+                        $specialChars = preg_match('@[^\w]@', $_POST['password']);
+
+                        if (!$uppercase || !$lowercase || !$number || !$specialChars || strlen($_POST['password']) < 12) {
+                            echo '<p style="color:red">Le mot de passe ne respecte pas les critères:';
+                            echo '<br>- 12 caractères minimum';
+                            echo '<br>- Une majuscule';
+                            echo '<br>- Une minuscule';
+                            echo '<br>- Un nombre';
+                            echo '<br>- Un caractère spécial';
+                        } else {
+                            include "../database/data-source.php";
+
+                            $fname = $_POST['first_name'];
+                            $lname = $_POST['last_name'];
+                            $mail = $_POST['email'];
+                            $psw = md5($_POST['password']);
+
+                            $database = new DataSource();
+                            $database->createUser($mail, $psw, $fname, $lname);
+                        }
                     }
                     ?>
                 </form>

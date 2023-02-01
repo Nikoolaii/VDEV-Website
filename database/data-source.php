@@ -1,31 +1,43 @@
 <?php
-class DataSource
-{
-  public ?PDO $database = null;
+include_once __DIR__ . '/../config/config.php';
 
-  function __construct()
+class DataSource extends PDO
+{
+  private static $_instance;
+
+  public function __construct()
   {
-    try {
-      $this->database = new PDO("mysql:host=localhost;port=8889;dbname=vdev", "root", "root");
-      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-      $this->database = null;
-      if ($_SERVER['REQUEST_URI'] !== "/database-error") {
-        header("Location: /database-error");
-      }
-    }
   }
 
-  public function validateUser(string $email, string $password)
+  public static function getInstance(): PDO
   {
-    $result = $this->database->query("SELECT * FROM `user` WHERE email = '$email';")->fetch();
-    return $result["password"] === md5($password) ? $result : null;
+
+    if (!isset(self::$_instance)) {
+
+      try {
+        self::$_instance = new PDO(SQL_DSN, SQL_USERNAME, SQL_PASSWORD);
+        self::$_instance->query("SET CHARACTER SET utf8");
+      } catch (PDOException $e) {
+        echo $e;
+      }
+    }
+    return self::$_instance;
+  }
+
+  public static function validateUser(string $email, string $hashPassword)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM `user` WHERE email = :email");
+    $req->bindValue(":email", $email, PDO::PARAM_STR);
+    $req->execute();
+    $result = $req->fetch(PDO::FETCH_OBJ);
+    return $result->{"password"} === md5($hashPassword) ? $result : null;
   }
 
   public function createUser(string $email, string $password, string $firstName, string $lastName)
   {
-
-    $req = $this->database->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (:email, :password, :firstName, :lastName, 0);");
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (:email, :password, :firstName, :lastName, 0)");
     $req->bindValue(':email', $email, PDO::PARAM_STR);
     $req->bindValue(':password', $password, PDO::PARAM_STR);
     $req->bindValue(':firstName', $firstName, PDO::PARAM_STR);
@@ -33,46 +45,46 @@ class DataSource
     $req->execute();
   }
 
-  public function userAlreadyExist(string $email)
-  {
-    $req = $this->database->prepare("SELECT * FROM user WHERE email = ':email';");
-    $req->bindValue(':email', $email, PDO::PARAM_INT);
-    $req->execute();
-    return $req->fetchAll(PDO::FETCH_OBJ);
-  }
+  // public function userAlreadyExist(string $email)
+  // {
+  //   $req = $this->database->prepare("SELECT * FROM user WHERE email = ':email';");
+  //   $req->bindValue(':email', $email, PDO::PARAM_INT);
+  //   $req->execute();
+  //   return $req->fetchAll(PDO::FETCH_OBJ);
+  // }
 
-  public function collectRegion()
-  {
-    $result = $this->database->query("SELECT * FROM `secteur`;")->fetchAll();
-    return $result;
-  }
+  // public function collectRegion()
+  // {
+  //   $result = $this->database->query("SELECT * FROM `secteur`;")->fetchAll();
+  //   return $result;
+  // }
 
-  public function collectLiaison(string $regionID)
-  {
-    $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
-    FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
-    LEFT JOIN  port p2 ON p2.id = l.arriveeID WHERE secteurId = :id;");
-    $req->bindValue(':id', $regionID, PDO::PARAM_INT);
-    $req->execute();
-    return $req->fetchAll(PDO::FETCH_OBJ);
-  }
+  // public function collectLiaison(string $regionID)
+  // {
+  //   $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
+  //   FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
+  //   LEFT JOIN  port p2 ON p2.id = l.arriveeID WHERE secteurId = :id;");
+  //   $req->bindValue(':id', $regionID, PDO::PARAM_INT);
+  //   $req->execute();
+  //   return $req->fetchAll(PDO::FETCH_OBJ);
+  // }
 
-  public function collectTraversee(string $liaisonID)
-  {
-    $req = $this->database->prepare("SELECT * FROM traversee WHERE liaisonId = :id AND date > CURRENT_DATE;");
-    $req->bindValue(':id', $liaisonID, PDO::PARAM_INT);
-    $req->execute();
-    return $req->fetchAll(PDO::FETCH_OBJ);
-  }
+  // public function collectTraversee(string $liaisonID)
+  // {
+  //   $req = $this->database->prepare("SELECT * FROM traversee WHERE liaisonId = :id AND date > CURRENT_DATE;");
+  //   $req->bindValue(':id', $liaisonID, PDO::PARAM_INT);
+  //   $req->execute();
+  //   return $req->fetchAll(PDO::FETCH_OBJ);
+  // }
 
-  public function showLiaison()
-  {
-    $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
-    FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
-    LEFT JOIN  port p2 ON p2.id = l.arriveeID");
-    $req->execute();
-    return $req->fetchAll(PDO::FETCH_OBJ);
-  }
+  // public function showLiaison()
+  // {
+  //   $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
+  //   FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
+  //   LEFT JOIN  port p2 ON p2.id = l.arriveeID");
+  //   $req->execute();
+  //   return $req->fetchAll(PDO::FETCH_OBJ);
+  // }
 
   public function getNBResa()
   {

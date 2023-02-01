@@ -2,11 +2,9 @@
 $email = $_POST["email"];
 $password = $_POST["password"];
 
-include "../database/data-source.php";
+include_once __DIR__ . "/../database/data-source.php";
 
-$database = new DataSource();
-
-$result = $database->validateUser($email, $password);
+$result = DataSource::validateUser($email, $password);
 
 if (!is_null($result)) {
   session_start();

@@ -8,6 +8,7 @@
   <title>MarieTeam</title>
   <link rel="stylesheet" href="styles/output.css">
   <link rel="stylesheet" href="styles/global.css">
+  <link rel="icon" href="assets/logo.ico" />
 </head>
 
 <body class="bg-zinc-50">
@@ -49,7 +50,7 @@
       require __DIR__ . '/views/tarif.php';
       break;
     case '/admin':
-      require __DIR__ . '/views/tarif.php';
+      require __DIR__ . '/views/admin.php';
       break;
     default:
       require __DIR__ . '/views/404.php';

@@ -64,4 +64,20 @@ class DataSource
     $req->execute();
     return $req->fetchAll(PDO::FETCH_OBJ);
   }
+
+  public function showLiaison()
+  {
+    $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
+    FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
+    LEFT JOIN  port p2 ON p2.id = l.arriveeID");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
+
+  public function getNBResa()
+  {
+    $req = $this->database->prepare("SELECT COUNT(*) FROM reservation");
+    $req->execute();
+    return $req->fetch(PDO::FETCH_NUM);
+  }
 }

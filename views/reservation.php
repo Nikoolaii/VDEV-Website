@@ -1,3 +1,6 @@
+<?php
+include_once './database/data-source.php';
+?>
 <script src="./scripts/reservation.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <div class="flex items-center justify-center p-8 z-10">
@@ -9,7 +12,7 @@
                         <label for="fName" class="mb-3 block text-base font-medium text-[#07074D]">
                             Nom
                         </label>
-                        <input type="text" name="nom" id="nom" placeholder="Nom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        <input type="text" name="fName" id="fName" placeholder="Nom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     </div>
                 </div>
                 <div class="w-full px-3 sm:w-1/2">
@@ -17,7 +20,7 @@
                         <label for="lName" class="mb-3 block text-base font-medium text-[#07074D]">
                             Prénom
                         </label>
-                        <input type="text" name="prenom" id="prenom" placeholder="Prénom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        <input type="text" name="lName" id="lName" placeholder="Prénom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     </div>
                 </div>
             </div>
@@ -49,10 +52,9 @@
                 <label for="regiondispo" class="block mb-3 text-base font-medium text-[#07074D]">
                     Les régions
                 </label>
-                <select id="region" onchange="dispo()" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <select id="region" name="region" onchange="dispo()" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                     <option selected disabled>Choisissez une région</option>
                     <?php
-                    include "./database/data-source.php";
                     $database = new DataSource();
                     $result = $database->collectRegion();
 
@@ -67,7 +69,7 @@
                 <label for="liaison" class="block mb-3 text-base font-medium text-[#07074D]">
                     Liaisons disponibles
                 </label>
-                <select id="liaison" onchange="traverseedispo()" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <select id="liaison" name="liaison" onchange="traverseedispo()" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                     <option selected disabled value="none">Choisissez une liaison</option>
                 </select>
             </div>
@@ -76,7 +78,7 @@
                 <label for="traversee" class="block mb-3 text-base font-medium text-[#07074D]">
                     Traversée disponibles
                 </label>
-                <select id="traversee" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <select id="traversee" name="traversee" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                     <option selected disabled value="none">Choisissez une traversée</option>
                 </select>
             </div>
@@ -179,8 +181,12 @@
             </div>
             <?php
             if (isset($_POST['fName']) && isset($_POST['lName']) && isset($_POST['adress']) && isset($_POST['city']) && isset($_POST['cp']) && isset($_POST['region']) && isset($_POST['liaison']) && isset($_POST['traversee']) && isset($_POST['adult']) && isset($_POST['junior']) && isset($_POST['baby']) && isset($_POST['fourgon']) && isset($_POST['cc']) && isset($_POST['camion']) && isset($_POST['voiture4']) && isset($_POST['voiture5']) && isset($_POST['animals'])) {
-                echo 'test';
-                header('Location: /tarif');
+                $database = new DataSource();
+                $result = $database->validateReservation($_POST['fName'], $_POST['lName'], $_POST['adress'],  $_POST['city'],  $_POST['cp'], $_POST['region'], $_POST['liaison'], $_POST['traversee'],  $_POST['adult'],  $_POST['junior'],  $_POST['baby'],  $_POST['fourgon'], $_POST['cc'], $_POST['camion'], $_POST['voiture4'], $_POST['voiture5'], $_POST['animals']);
+
+                if (isset($result)) {
+                    header('Location: /tarif');
+                }
             }
             ?>
         </form>

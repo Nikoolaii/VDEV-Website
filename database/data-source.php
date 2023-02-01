@@ -80,11 +80,26 @@ class DataSource
     $req->execute();
     return $req->fetch(PDO::FETCH_NUM);
   }
-  public function validateReservation(string $nom, string $prenom, string $adresse, string $ville, string $cp, int $traversees)
+  public function validateReservation(string $nom, string $prenom, string $adresse, string $ville, string $cp, int $traversees, string $typeId, int $userId, int $nbAdulte, int $nbJunior, int $nbEnfant, int $nbFourgon, int $nbCC, int $nbCamion, int $nbVoiture4, int $nbVoiture5, int $nbAnimaux)
   {
-    $result = $this->database->query("INSERT INTO `reservation` WHERE nom = '$nom' prenom = '$prenom', adresse = '$adresse', ville = '$ville', cp = '$cp', traversees ='$traversees'  ;")->fetch();
-    if (isset($result)){
-      
-    }
+    $req = $this->database->prepare("INSERT INTO `reservation`(nom,prenom,addresse,code_postal,ville,typeId,traverseeId,userId,nbAdulte,nbJunior,nbEnfant,nbFourgon,nbCC,nbCamion,nbVoiture4,nbVoiture5,nbAnimaux)VALUES(:fName,:lName,:adress,:cp,:city,:region,:liaison,:traversee,:adult,:junior,:baby,:fourgon,:cc,:camion,:voiture4,:voiture5,:animals");
+    $req->bindValue(':fName', $nom, PDO::PARAM_STR);
+    $req->bindValue(':lName', $prenom, PDO::PARAM_STR);
+    $req->bindValue(':adress', $adresse, PDO::PARAM_STR);
+    $req->bindValue(':city', $ville, PDO::PARAM_STR);
+    $req->bindValue(':cp', $cp, PDO::PARAM_INT);
+    $req->bindValue(':region', $traversees, PDO::PARAM_INT);
+    $req->bindValue(':liaison', $typeId, PDO::PARAM_INT);
+    $req->bindValue(':traversee', $userId, PDO::PARAM_INT);
+    $req->bindValue(':adult', $nbAdulte, PDO::PARAM_INT);
+    $req->bindValue(':junior', $nbJunior, PDO::PARAM_INT);
+    $req->bindValue(':baby', $nbEnfant, PDO::PARAM_INT);
+    $req->bindValue(':fourgon', $nbFourgon, PDO::PARAM_INT);
+    $req->bindValue(':cc', $nbCC, PDO::PARAM_INT);
+    $req->bindValue(':camion', $nbCamion, PDO::PARAM_INT);
+    $req->bindValue(':voiture4', $nbVoiture4, PDO::PARAM_INT);
+    $req->bindValue(':voiture5', $nbVoiture5, PDO::PARAM_INT);
+    $req->bindValue(':animals', $nbAnimaux, PDO::PARAM_INT);
+    $req->execute();
   }
 }

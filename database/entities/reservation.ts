@@ -30,9 +30,6 @@ export class Reservation {
   ville: string
 
   @Column()
-  quantite: number
-
-  @Column()
   nbAdulte: number
 
   @Column()

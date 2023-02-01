@@ -34,7 +34,7 @@ class DataSource extends PDO
     return $result->{"password"} === md5($hashPassword) ? $result : null;
   }
 
-  public function createUser(string $email, string $password, string $firstName, string $lastName)
+  public static function createUser(string $email, string $password, string $firstName, string $lastName)
   {
     $pdo = self::getInstance();
     $req = $pdo->prepare("INSERT INTO `user` (email, password, first_name, last_name, admin) VALUES (:email, :password, :firstName, :lastName, 0)");
@@ -45,29 +45,32 @@ class DataSource extends PDO
     $req->execute();
   }
 
-  // public function userAlreadyExist(string $email)
-  // {
-  //   $req = $this->database->prepare("SELECT * FROM user WHERE email = ':email';");
-  //   $req->bindValue(':email', $email, PDO::PARAM_INT);
-  //   $req->execute();
-  //   return $req->fetchAll(PDO::FETCH_OBJ);
-  // }
+  public static function checkUserExist(string $email)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM user WHERE email = :email");
+    $req->bindValue(':email', $email, PDO::PARAM_STR);
+    $req->execute();
+    $result = $req->fetch(PDO::FETCH_OBJ);
+    return $result ? true : false;
+  }
 
-  // public function collectRegion()
-  // {
-  //   $result = $this->database->query("SELECT * FROM `secteur`;")->fetchAll();
-  //   return $result;
-  // }
+  public static function collectSecteur()
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM `secteur`");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
 
-  // public function collectLiaison(string $regionID)
-  // {
-  //   $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
-  //   FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
-  //   LEFT JOIN  port p2 ON p2.id = l.arriveeID WHERE secteurId = :id;");
-  //   $req->bindValue(':id', $regionID, PDO::PARAM_INT);
-  //   $req->execute();
-  //   return $req->fetchAll(PDO::FETCH_OBJ);
-  // }
+  public static function collectLiaison(string $secteurId)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT l.id, distance, secteurId, p1.nom AS depart, p2.nom AS arrivee, imglink FROM port p1 INNER JOIN liaison l ON p1.id = l.departID LEFT JOIN port p2 ON p2.id = l.arriveeID WHERE secteurId = :id");
+    $req->bindValue(':id', $secteurId, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
 
   // public function collectTraversee(string $liaisonID)
   // {

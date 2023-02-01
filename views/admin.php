@@ -2,7 +2,7 @@
 
 include_once "./controllers/user.php";
 if ($user["admin"] == 0) {
-    header('Location: /');
+  header('Location: /');
 }
 include "./database/data-source.php";
 $database = new DataSource();
@@ -37,14 +37,14 @@ echo '</thead>';
 echo '<tbody>';
 foreach ($result as $value) {
 
-    echo '<tr class="border-b">';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'id'} . '</td>';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'depart'} . '</td>';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'arrivee'} . '</td>';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'distance'} . '</td>';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><img src = "../assets/cross.svg" alt="My Happy SVG" class="w-5 h-5"/></td>';
-    echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><img src = "../assets/bin.svg" alt="My Happy SVG" class="w-5 h-5"/></td>';
-    echo '</tr>';
+  echo '<tr class="border-b">';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'id'} . '</td>';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'depart'} . '</td>';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'arrivee'} . '</td>';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . $value->{'distance'} . '</td>';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><img src = "../assets/cross.svg" alt="My Happy SVG" class="w-5 h-5"/></td>';
+  echo '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><img src = "../assets/bin.svg" alt="My Happy SVG" class="w-5 h-5"/></td>';
+  echo '</tr>';
 }
 echo '</tbody>';
 echo '</table>';

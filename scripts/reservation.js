@@ -85,6 +85,7 @@ function howManyPets(ev) {
 
 function howManyCar(ev) {
   const car = document.getElementById('howmanycar')
-  if (ev.id === 'car-yes') car.classList.remove('hidden')
+  if (ev.id === 'car-yes')
+    car.classList.remove('hidden') && car.classList.add('flex')
   else car.classList.add('hidden')
 }

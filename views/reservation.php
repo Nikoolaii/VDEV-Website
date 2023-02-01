@@ -9,7 +9,7 @@
                         <label for="fName" class="mb-3 block text-base font-medium text-[#07074D]">
                             Nom
                         </label>
-                        <input type="text" name="fName" id="fName" placeholder="Nom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        <input type="text" name="nom" id="nom" placeholder="Nom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     </div>
                 </div>
                 <div class="w-full px-3 sm:w-1/2">
@@ -17,7 +17,7 @@
                         <label for="lName" class="mb-3 block text-base font-medium text-[#07074D]">
                             Prénom
                         </label>
-                        <input type="text" name="lName" id="lName" placeholder="Prénom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        <input type="text" name="prenom" id="prenom" placeholder="Prénom" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     </div>
                 </div>
             </div>

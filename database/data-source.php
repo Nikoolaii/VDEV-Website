@@ -80,4 +80,11 @@ class DataSource
     $req->execute();
     return $req->fetch(PDO::FETCH_NUM);
   }
+  public function validateReservation(string $nom, string $prenom, string $adresse, string $ville, string $cp, int $traversees)
+  {
+    $result = $this->database->query("INSERT INTO `reservation` WHERE nom = '$nom' prenom = '$prenom', adresse = '$adresse', ville = '$ville', cp = '$cp', traversees ='$traversees'  ;")->fetch();
+    if (isset($result)){
+      
+    }
+  }
 }

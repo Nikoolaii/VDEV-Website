@@ -1,12 +1,17 @@
 <?php
+include_once __DIR__ . "/../database/data-source.php";
 
-include_once "./controllers/user.php";
-if ($user["admin"] == 0) {
+if (!isset($_SESSION)) {
+  session_start();
+}
+$user = isset($_SESSION["user"]) ? $_SESSION["user"] : null;
+
+if (!$user->{"admin"}) {
   header('Location: /');
 }
-include "./database/data-source.php";
-$database = new DataSource();
-$result = $database->showLiaison();
+
+$result = DataSource::showLiaison();
+
 echo '<div class="flex flex-col">';
 echo '<div class="overflow-x-auto sm:-mx-6 lg:-mx-8">';
 echo '<div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">';
@@ -55,6 +60,6 @@ echo '</div>';
 
 <h1 class="text-2xl font-bold text-blue-500">Nombre de réservations</h1>
 <?php
-$result = $database->getNBResa();
+$result = DataSource::getNBResa();
 echo $result[0];
 ?>

@@ -4,14 +4,14 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn
+  PrimaryGeneratedColumn
 } from 'typeorm'
 import { Categorie } from './categorie'
 import { Reservation } from './reservation'
 
 @Entity()
 export class Type {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: string
 
   @Column()

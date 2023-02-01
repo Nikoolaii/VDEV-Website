@@ -72,32 +72,35 @@ class DataSource extends PDO
     return $req->fetchAll(PDO::FETCH_OBJ);
   }
 
-  // public function collectTraversee(string $liaisonID)
-  // {
-  //   $req = $this->database->prepare("SELECT * FROM traversee WHERE liaisonId = :id AND date > CURRENT_DATE;");
-  //   $req->bindValue(':id', $liaisonID, PDO::PARAM_INT);
-  //   $req->execute();
-  //   return $req->fetchAll(PDO::FETCH_OBJ);
-  // }
-
-  // public function showLiaison()
-  // {
-  //   $req = $this->database->prepare("SELECT l.id,distance,secteurId,p1.nom AS depart, p2.nom AS arrivee, imglink
-  //   FROM port p1 INNER JOIN liaison l ON p1.id = l.departID
-  //   LEFT JOIN  port p2 ON p2.id = l.arriveeID");
-  //   $req->execute();
-  //   return $req->fetchAll(PDO::FETCH_OBJ);
-  // }
-
-  public function getNBResa()
+  public static function collectTraversee(string $liaisonId)
   {
-    $req = $this->database->prepare("SELECT COUNT(*) FROM reservation");
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM traversee WHERE liaisonId = :id AND date > CURRENT_DATE");
+    $req->bindValue(':id', $liaisonId, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
+
+  public static function showLiaison()
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT l.id, distance, secteurId, p1.nom AS depart, p2.nom AS arrivee, imglink FROM port p1 INNER JOIN liaison l ON p1.id = l.departId LEFT JOIN  port p2 ON p2.id = l.arriveeId");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
+
+  public static function getNBResa()
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT COUNT(*) FROM reservation");
     $req->execute();
     return $req->fetch(PDO::FETCH_NUM);
   }
-  public function validateReservation(string $nom, string $prenom, string $adresse, string $ville, string $cp, int $traversees, string $typeId, int $userId, int $nbAdulte, int $nbJunior, int $nbEnfant, int $nbFourgon, int $nbCC, int $nbCamion, int $nbVoiture4, int $nbVoiture5, int $nbAnimaux)
+
+  public static function validateReservation(string $nom, string $prenom, string $adresse, string $ville, string $cp, int $traversees, string $typeId, int $userId, int $nbAdulte, int $nbJunior, int $nbEnfant, int $nbFourgon, int $nbCC, int $nbCamion, int $nbVoiture4, int $nbVoiture5, int $nbAnimaux)
   {
-    $req = $this->database->prepare("INSERT INTO `reservation`(nom,prenom,addresse,code_postal,ville,typeId,traverseeId,userId,nbAdulte,nbJunior,nbEnfant,nbFourgon,nbCC,nbCamion,nbVoiture4,nbVoiture5,nbAnimaux)VALUES(:fName,:lName,:adress,:cp,:city,:region,:liaison,:traversee,:adult,:junior,:baby,:fourgon,:cc,:camion,:voiture4,:voiture5,:animals");
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("INSERT INTO `reservation`(nom,prenom,addresse,code_postal,ville,typeId,traverseeId,userId,nbAdulte,nbJunior,nbEnfant,nbFourgon,nbCC,nbCamion,nbVoiture4,nbVoiture5,nbAnimaux)VALUES(:fName,:lName,:adress,:cp,:city,:region,:liaison,:traversee,:adult,:junior,:baby,:fourgon,:cc,:camion,:voiture4,:voiture5,:animals)");
     $req->bindValue(':fName', $nom, PDO::PARAM_STR);
     $req->bindValue(':lName', $prenom, PDO::PARAM_STR);
     $req->bindValue(':adress', $adresse, PDO::PARAM_STR);

@@ -26,13 +26,7 @@ function dispo() {
     output.forEach((element) => {
       const opt = document.createElement('option')
       opt.value = element.id
-      opt.text =
-        element.depart +
-        ' - ' +
-        element.arrivee +
-        ' (' +
-        element.distance +
-        'Km)'
+      opt.text = `${element.depart} - ${element.arrivee} (${element.distance}Km)`
       liaison.add(opt, null)
     })
   })
@@ -41,7 +35,7 @@ function dispo() {
   })
 }
 
-function traverseedispo() {
+function traverseeDispo() {
   const reservation = document.getElementById('traverseedispo')
   const liaison = document.getElementById('liaison')
   const traversee = document.getElementById('traversee')
@@ -68,7 +62,7 @@ function traverseedispo() {
     output.forEach((element) => {
       const opt = document.createElement('option')
       opt.value = element.id
-      opt.text = element.date + ' - ' + element.heure
+      opt.text = `${element.date} - ${element.heure}`
       traversee.add(opt, null)
     })
   })

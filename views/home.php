@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="/styles/home.css">
-<script src="/scripts/home.js"></script>
+<!-- <link rel="stylesheet" href="./styles/home.css"> -->
+<!-- <script src="/scripts/home.js"></script> -->
 <div>
   <div class="relative w-full h-96">
     <img src="/assets/indexminecraftwallpaper.jpeg" class="w-full h-full object-cover object-[center_60%] opacity-40 absolute">

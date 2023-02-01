@@ -1,10 +1,6 @@
 <?php
+include __DIR__ . "/../data-source.php";
 
-include "../data-source.php";
-
-$id = $_POST['id'];
-$database = new DataSource();
-
-$result = $database->collectTraversee($id);
+$result = DataSource::collectTraversee($_POST['id']);
 
 echo json_encode($result);

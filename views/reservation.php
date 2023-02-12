@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 include_once __DIR__ . '/../database/data-source.php';
 include_once __DIR__ . '/../utils/functions.php';
 
@@ -11,11 +13,8 @@ foreach ($resultSecteur as $value) {
 }
 
 if (!is_null(getReservationDetails($_POST))) {
-  $result = DataSource::validateReservation($_POST['fName'], $_POST['lName'], $_POST['adress'], $_POST['city'], $_POST['cp'], $_POST['region'], $_POST['liaison'], $_POST['traversee'], $_POST['adult'], $_POST['junior'], $_POST['baby'], $_POST['fourgon'], $_POST['cc'], $_POST['camion'], $_POST['voiture4'], $_POST['voiture5'], $_POST['animals']);
-
-  // if (isset($result)) {
-  //   header('Location: /tarif');
-  // }
+  // $result = DataSource::validateReservation($_POST['fName'], $_POST['lName'], $_POST['adress'], $_POST['city'], $_POST['cp'], $_POST['region'], $_POST['liaison'], $_POST['traversee'], $_POST['adult'], $_POST['junior'], $_POST['baby'], $_POST['fourgon'], $_POST['cc'], $_POST['camion'], $_POST['voiture4'], $_POST['voiture5'], $_POST['animals']);
+  header('Location: /tarif');
 }
 
 ?>
@@ -25,7 +24,7 @@ if (!is_null(getReservationDetails($_POST))) {
 
 <div class="flex items-center justify-center p-8 z-10">
   <div class="mx-auto w-full max-w-[550px]">
-    <form method="POST" action="">
+    <form method="POST" action="/tarif">
       <div class="-mx-3 flex flex-wrap">
         <div class="w-full px-3 sm:w-1/2">
           <div class="mb-5">

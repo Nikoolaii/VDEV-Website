@@ -1,11 +1,12 @@
 <!-- <link rel="stylesheet" href="./styles/home.css"> -->
 <!-- <script src="/scripts/home.js"></script> -->
 <div>
-  <div class="relative w-full h-96">
-    <img src="/assets/indexminecraftwallpaper.jpeg" class="w-full h-full object-cover object-[center_60%] opacity-40 absolute">
-    <div class="flex  items-center gap-1 text-2xl absolute top-1/2 left-1/2 lg:left-3/4 -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none group">
-      <img src="/assets/logo.svg" class="h-32 group-hover:-rotate-12 group-focus-visible:-rotate-12 transition-transform duration-300">
-      <h1 class="font-bold text-blue-500 text-7xl font-bannerFont hidden lg:block">MarieTeam</h1>
+    <div class="relative w-full h-96">
+        <img src="/assets/indexminecraftwallpaper.jpeg" class="w-full h-full object-cover object-[center_60%] opacity-40 absolute">
+        <div class="flex  items-center gap-1 text-2xl absolute top-1/2 left-1/2 lg:left-3/4 -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none group">
+            <img src="/assets/logo.svg" class="h-32 group-hover:-rotate-12 group-focus-visible:-rotate-12 transition-transform duration-300">
+            <h1 class="font-bold text-blue-500 text-7xl font-bannerFont hidden lg:block">MarieTeam</h1>
+        </div>
     </div>
     <div class="w-full lg:h-auto text-center">
         <h1 class="text-2xl font-bold text-blue-500 m-4">Qui est MarieTeam ?</h1>
@@ -38,5 +39,5 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
 </div>

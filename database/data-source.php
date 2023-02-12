@@ -81,6 +81,14 @@ class DataSource extends PDO
     return $req->fetchAll(PDO::FETCH_OBJ);
   }
 
+  public static function collectPorts()
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM port");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_OBJ);
+  }
+
   public static function showLiaison()
   {
     $pdo = self::getInstance();
@@ -119,5 +127,34 @@ class DataSource extends PDO
     $req->bindValue(':voiture5', $nbVoiture5, PDO::PARAM_INT);
     $req->bindValue(':animals', $nbAnimaux, PDO::PARAM_INT);
     $req->execute();
+  }
+
+  public static function newLiaison(int $port1, int $port2, int $distance, string $link, int $secteur)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("INSERT INTO liaison(secteurId, departId, arriveeId, imglink, distance) VALUES (:secteur, :depart, :arrivee, :imglink, :distance)");
+    $req->bindValue(':secteur', $secteur, PDO::PARAM_INT);
+    $req->bindValue(':depart', $port1, PDO::PARAM_INT);
+    $req->bindValue(':arrivee', $port2, PDO::PARAM_INT);
+    $req->bindValue(':imglink', $link, PDO::PARAM_STR);
+    $req->bindValue(':distance', $distance, PDO::PARAM_INT);
+    $req->execute();
+  }
+
+  public static function newPort(string $name)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("INSERT INTO `port`(nom) VALUES (:name)");
+    $req->bindValue(':name', $name, PDO::PARAM_STR);
+    $req->execute();
+  }
+
+  public static function getTarif(int $traversee)
+  {
+    $pdo = self::getInstance();
+    $req = $pdo->prepare("SELECT * FROM tarif WHERE traverseeId = :traverseeId");
+    $req->bindValue(':traverseeId', $traversee, PDO::PARAM_INT);
+    $req->execute();
+    return $req->fetch(PDO::FETCH_OBJ);
   }
 }

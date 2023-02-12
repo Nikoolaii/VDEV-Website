@@ -34,7 +34,7 @@ $user = isset($_SESSION["user"]) ? $_SESSION["user"] : null;
     <div class="relative">
       <img src="/assets/profil.svg" alt="Profil" onclick="profilToggle()" class="w-6 cursor-pointer">
 
-      <div id="appbar-profile-menu" class="absolute right-0 w-40 mt-2 p-1 rounded-md border border-zinc-400 shadow-lg text-sm bg-zinc-50">
+      <div id="appbar-profile-menu" class="absolute right-0 w-40 mt-2 p-1 rounded-md border border-zinc-400 shadow-lg text-sm bg-zinc-50 hidden">
         <?php if (is_null($user)) : ?>
           <a href="/signin" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-blue-500/70 outline-none focus-visible:bg-blue-500/70">Se connecter</a>
           <a href="/signup" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-blue-500/70 outline-none focus-visible:bg-blue-500/70">S'inscrire</a>

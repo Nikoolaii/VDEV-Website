@@ -5,7 +5,7 @@ $resultSecteur = DataSource::collectSecteur();
 $data = [];
 
 for ($i = 0; $i < count($resultSecteur); $i++) {
-  $data[]["secteur"] = $resultSecteur[0];
+  $data[]["secteur"] = $resultSecteur[$i];
 
   $resultLiaison = DataSource::collectLiaison($resultSecteur[$i]->{'id'});
 
@@ -33,5 +33,6 @@ for ($i = 0; $i < count($resultSecteur); $i++) {
         </div>
       </div>
     <?php endforeach; ?>
+    <br><br>
   <?php endforeach; ?>
 </div>

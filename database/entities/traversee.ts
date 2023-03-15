@@ -21,14 +21,18 @@ export class Traversee {
   @Column({ type: 'time' })
   heure: Date
 
-  @ManyToOne(() => Bateau, (bateau) => bateau.traversees)
-  @JoinColumn()
+  @ManyToOne(() => Bateau, (bateau) => bateau.traversees, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'bateau_id' })
   bateau: Bateau
 
   @OneToMany(() => Reservation, (reservation) => reservation.traversee)
   reservations: Reservation[]
 
-  @ManyToOne(() => Liaison, (liaison) => liaison.traversees)
-  @JoinColumn()
+  @ManyToOne(() => Liaison, (liaison) => liaison.traversees, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'liaison_id' })
   liaison: Liaison
 }

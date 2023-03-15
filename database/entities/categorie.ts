@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn
-} from 'typeorm'
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
 import { Bateau } from './bateau'
 import { Type } from './type'
 
@@ -17,12 +10,10 @@ export class Categorie {
   @Column()
   nom: string
 
-  @Column({ name: 'capacite_max' })
-  capaciteMax: number
-
-  @ManyToOne(() => Bateau, (bateau) => bateau.categories)
-  @JoinColumn()
-  bateau: Bateau
+  @ManyToMany(() => Bateau, (bateau) => bateau.categories, {
+    onDelete: 'CASCADE'
+  })
+  bateaux: Bateau[]
 
   @OneToMany(() => Type, (type) => type.categorie)
   types: Type[]

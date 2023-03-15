@@ -9,6 +9,7 @@ export default new DataSource({
   password: 'root',
   database: 'vdev',
   entities: [join(__dirname, 'entities', '*.{ts,js}')],
+  subscribers: [join(__dirname, 'subscribers', '*.{ts,js}')],
   synchronize: false,
   migrations: [join(__dirname, 'migrations', '*.{ts,js}')]
 })

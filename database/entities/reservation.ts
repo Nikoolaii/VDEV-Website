@@ -2,6 +2,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
@@ -21,7 +23,7 @@ export class Reservation {
   prenom: string
 
   @Column()
-  addresse: string
+  adresse: string
 
   @Column({ name: 'code_postal' })
   codePostal: string
@@ -30,41 +32,34 @@ export class Reservation {
   ville: string
 
   @Column()
-  nbAdulte: number
+  email: string
 
-  @Column()
-  nbJunior: number
+  @ManyToMany(() => Type, (type) => type.reservations, {
+    onDelete: 'CASCADE'
+  })
+  @JoinTable({
+    name: 'reservations_types',
+    joinColumn: {
+      name: 'reservation_id',
+      referencedColumnName: 'id'
+    },
+    inverseJoinColumn: {
+      name: 'type_id',
+      referencedColumnName: 'id'
+    }
+  })
+  types: Type[]
 
-  @Column()
-  nbEnfant: number
-
-  @Column()
-  nbFourgon: number
-
-  @Column()
-  nbCC: number
-
-  @Column()
-  nbCamion: number
-
-  @Column()
-  nbVoiture4: number
-
-  @Column()
-  nbVoiture5: number
-
-  @Column()
-  nbAnimaux: number
-
-  @ManyToOne(() => Type, (type) => type.reservations)
-  @JoinColumn()
-  type: Type
-
-  @ManyToOne(() => Traversee, (traversee) => traversee.reservations)
-  @JoinColumn()
+  @ManyToOne(() => Traversee, (traversee) => traversee.reservations, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'traversee_id' })
   traversee: Traversee
 
-  @ManyToOne(() => User, (user) => user.reservations)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.reservations, {
+    nullable: true,
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'user_id' })
   user: User
 }

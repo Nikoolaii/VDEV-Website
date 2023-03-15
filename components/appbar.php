@@ -1,16 +1,12 @@
 <?php
 $links = [
   [
-    "name" => "Reservation",
-    "link" => "/reservation"
-  ],
-  [
-    "name" => "Liaisons",
-    "link" => "/liaisons"
+    "name" => "Secteurs",
+    "link" => "/secteur"
   ]
 ];
 
-session_start();
+if (session_status() != 2) session_start();
 $user = isset($_SESSION["user"]) ? $_SESSION["user"] : null;
 ?>
 
@@ -41,10 +37,12 @@ $user = isset($_SESSION["user"]) ? $_SESSION["user"] : null;
         <?php else : ?>
           <h1 class="py-2 px-3 font-semibold">Bonjour <?= $user->{"first_name"} ?></h1>
           <?php if ($user->{"admin"}) : ?>
-            <a href="/admin" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Pannel admin</a>
+            <a href="/admin" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-blue-500/70 outline-none focus-visible:bg-blue-500/70">Administrateur</a>
           <?php endif; ?>
 
-          <a href="./controllers/logout.php" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Se déconnecter</a>
+          <a href="/reservations" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-blue-500/70 outline-none focus-visible:bg-blue-500/70">Mes réservations</a>
+
+          <a href="/views/logout.php" class="w-full flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500 hover:text-zinc-50 outline-none focus-visible:bg-red-500 focus-visible::text-zinc-50">Se déconnecter</a>
         <?php endif; ?>
       </div>
     </div>

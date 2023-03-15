@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { LiaisonsTypesPeriodes } from './liaisonsTypesPeriodes'
 
 @Entity()
 export class Periode {
@@ -10,4 +11,7 @@ export class Periode {
 
   @Column()
   fin: Date
+
+  @OneToMany(() => LiaisonsTypesPeriodes, (ltp) => ltp.periode)
+  laisonsTypesPeriodes: LiaisonsTypesPeriodes[]
 }

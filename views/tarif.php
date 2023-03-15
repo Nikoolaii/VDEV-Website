@@ -1,63 +1,95 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-include_once __DIR__ . '/../utils/functions.php';
-if (is_null(getReservationDetails($_POST))) {
-  // $result = DataSource::validateReservation($_POST['fName'], $_POST['lName'], $_POST['adress'], $_POST['city'], $_POST['cp'], $_POST['region'], $_POST['liaison'], $_POST['traversee'], $_POST['adult'], $_POST['junior'], $_POST['baby'], $_POST['fourgon'], $_POST['cc'], $_POST['camion'], $_POST['voiture4'], $_POST['voiture5'], $_POST['animals']);
-  header('Location: /reservation');
+include_once __DIR__ . '/../controllers/utils.php';
+
+$traverseeId = $params['traverseeId'];
+
+if (session_status() != 2) session_start();
+$user = isset($_SESSION["user"]) ? $_SESSION["user"] : null;
+
+$traversee = getTraverseeWithFullInformations($traverseeId);
+$date = new DateTime($traversee->date);
+$tarifs = getTarifsForTraversee($traverseeId);
+
+if (isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) && isset($_POST["adresse"]) && isset($_POST["codePostal"]) && isset($_POST["ville"])) {
+  $nom = $_POST["nom"];
+  $prenom = $_POST["prenom"];
+  $email = $_POST["email"];
+  $adresse = $_POST["adresse"];
+  $codePostal = $_POST["codePostal"];
+  $ville = $_POST["ville"];
+  $userId = $_SESSION["user"]->{"id"} ?? null;
+
+  $quantites = [];
+
+  foreach ($tarifs as $tarif) {
+    if (isset($_POST["quantite-$tarif->type_id"]) && $_POST["quantite-$tarif->type_id"] > 0)
+      $quantites[$tarif->type_id] = $_POST["quantite-$tarif->type_id"];
+  }
+
+  $reservationId = createReservation($nom, $prenom, $email, $adresse, $codePostal, $ville, $traverseeId, $quantites, $userId);
+
+  if ($reservationId != null) {
+    header("Location: /reservation/$reservationId");
+  }
 }
-
-include_once __DIR__ . "/../database/data-source.php";
-
-$tarif = DataSource::getTarif($_POST['traversee']);
-$pAdulte = $tarif->{"pAdulte"};
-$pJunior = $tarif->{"pJunior"};
-$pEnfant = $tarif->{"pEnfant"};
-$pFourgon = $tarif->{"pFourgon"};
-$pCC = $tarif->{"pCC"};
-$pCamion = $tarif->{"pCamion"};
-$pVoiture4 = $tarif->{"pVoiture4"};
-$pVoiture5 = $tarif->{"pVoiture5"};
-$pAnimaux = $tarif->{"pAnimaux"};
-
-$nbAdulte = $_POST['adult'];
-$nbJunior = $_POST['junior'];
-$nbBaby = $_POST['baby'];
-$nbFourgon = $_POST['fourgon'];
-$nbCC = $_POST['cc'];
-$nbCamion = $_POST['camion'];
-$nbVoiture4 = $_POST['voiture4'];
-$nbVoiture5 = $_POST['voiture5'];
-$nbAnimals = $_POST['animals'];
 ?>
 
-<h1 class="text-2xl font-bold text-blue-500">Récapitulatif des tarifs</h1>
-<?php
-echo '<p>Adulte : ' . $nbAdulte . '</p>';
-echo '<p class="italic text-gray-500">' . $pAdulte . '€ : ' . $nbAdulte * $pAdulte . '€</p>';
-echo '<p>Junior : ' . $nbJunior . '</p>';
-echo '<p class="italic text-gray-500">' . $pJunior . '€ : ' . $nbJunior * $pJunior . '€</p>';
-echo '<p>Baby : ' . $nbBaby . '</p>';
-echo '<p class="italic text-gray-500">' . $pEnfant . '€ : ' . $nbBaby * $pEnfant . '€</p>';
-echo '<p>Fourgon : ' . $nbFourgon . '</p>';
-echo '<p class="italic text-gray-500">' . $pFourgon . '€ : ' . $nbFourgon * $pFourgon . '€</p>';
-echo '<p>Camping Car : ' . $nbCC . '</p>';
-echo '<p class="italic text-gray-500">' . $pCC . '€ : ' . $nbCC * $pCC . '€</p>';
-echo '<p>Camion : ' . $nbCamion . '</p>';
-echo '<p class="italic text-gray-500">' . $pCamion . '€ : ' . $nbCamion * $pCamion . '€</p>';
-echo '<p>Voiture long.inf.4m : ' . $nbVoiture4 . '</p>';
-echo '<p class="italic text-gray-500">' . $pVoiture4 . '€ : ' . $nbVoiture4 * $pVoiture4 . '€</p>';
-echo '<p>Voiture long.inf.5m : ' . $nbVoiture5 . '</p>';
-echo '<p class="italic text-gray-500">' . $pVoiture5 . '€ : ' . $nbVoiture5 * $pVoiture5 . '€</p>';
-echo '<p>Animals : ' . $nbAnimals . '</p>';
-echo '<p class="italic text-gray-500">' . $pAnimaux . '€ : ' . $nbAnimals * $pAnimaux . '€</p>';
+<div class="mx-auto max-w-6xl w-full">
+  <h1 class="text-3xl">Tarifs pour la liaison <?= $traversee->port_arrivee ?> - <?= $traversee->port_depart ?></h1>
+  <p class="text-xl"><?= $date->format('d/m/Y') ?> - <?= $traversee->heure ?></p>
 
-echo '<br /><hr /><br />';
-echo '<p> Montant Total :';
-$MontantTotal = $nbAdulte * $pAdulte + $nbJunior * $pJunior + $nbBaby * $pEnfant + $nbFourgon * $pFourgon + $nbCC * $pCC + $nbCamion * $pCamion + $nbVoiture4 * $pVoiture4 + $nbVoiture5 * $pVoiture5 + $nbAnimals * $pAnimaux;
-echo '<p class="italic text-gray-500">' . $MontantTotal . '€</p>';
-?>
-<a href="/"><button type="submit" class="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-    Valider la réservation ma reservation
-  </button></a>
-<br>
+  <form method="post" class="flex flex-col items-center gap-4">
+    <div>
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" value="<?= $user->{'last_name'} ?? '' ?>" required>
+    </div>
+
+    <div>
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" name="prenom" value="<?= $user->{'first_name'} ?? '' ?>" required>
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="<?= $user->{'email'} ?? '' ?>" required>
+    </div>
+
+    <div>
+      <label for="adresse">Adresse</label>
+      <input type="text" id="adresse" name="adresse" required>
+    </div>
+
+    <div>
+      <label for="codePostal">Code postal</label>
+      <input type="text" id="codePostal" name="codePostal" required>
+    </div>
+
+    <div>
+      <label for="ville">Ville</label>
+      <input type="text" id="ville" name="ville" required>
+    </div>
+
+    <?php if (is_null($user)) : ?>
+      <a href="/signin" class="text-red-500 hover:underline">Créez-vous un compte ou utilisez l'adresse mail de votre compte pour pouvoir consulter votre réservation.</a>
+    <?php else : ?>
+      <p class="text-green-500">Vous êtes bien connecté, vous pourrez consulter votre réservation.</p>
+    <?php endif; ?>
+
+    <table class="border">
+      <tbody>
+        <?php foreach ($tarifs as $tarif) : ?>
+          <tr class="border-b">
+            <td class="px-2 py-1 text-lg font-medium"><?= $tarif->libelle ?></td>
+            <td class="pr-2 pl-8 py-1"><?= $tarif->tarif ?>€</td>
+            <td class="px-2 py-1 border-l">
+              <input type="number" value="0" class="text-right min-w-full w-28" min="0" max="<?= $tarif->capacite_max ?>" name="quantite-<?= $tarif->type_id ?>">
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+
+    <button type="submit" class="py-1 px-3 bg-zinc-100 border border-black">Valider</button>
+  </form>
+
+</div>

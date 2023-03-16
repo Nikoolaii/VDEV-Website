@@ -3,22 +3,20 @@ include_once __DIR__ . "/../database/data-source.php";
 
 class Equipement
 {
-  public static function create(string $nom, int $bateauVoyageurId): bool
+  public static function create(string $nom): bool
   {
     $pdo = DataSource::getInstance();
-    $req = $pdo->prepare("INSERT INTO `equipement` (nom, bateau_voyageur_id) VALUES (:nom, :bateau_voyageur_id)");
+    $req = $pdo->prepare("INSERT INTO `equipement` (nom) VALUES (:nom)");
     $req->bindValue(':nom', $nom, PDO::PARAM_STR);
-    $req->bindValue(':bateau_voyageur_id', $bateauVoyageurId, PDO::PARAM_INT);
     return $req->execute();
   }
 
-  public static function update(int $id, string $nom, int $bateauVoyageurId): bool
+  public static function update(int $id, string $nom): bool
   {
     $pdo = DataSource::getInstance();
-    $req = $pdo->prepare("UPDATE `equipement` SET nom = :nom, bateau_voyageur_id = :bateau_voyageur_id WHERE id = :id");
+    $req = $pdo->prepare("UPDATE `equipement` SET nom = :nom WHERE id = :id");
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->bindValue(':nom', $nom, PDO::PARAM_STR);
-    $req->bindValue(':bateau_voyageur_id', $bateauVoyageurId, PDO::PARAM_INT);
     return $req->execute();
   }
 

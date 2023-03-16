@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { BateauVoyageur } from './bateauVoyageur'
 
 @Entity()
@@ -9,12 +16,23 @@ export class Equipement {
   @Column()
   nom: string
 
-  @ManyToOne(
+  @ManyToMany(
     () => BateauVoyageur,
     (bateauVoyageur) => bateauVoyageur.equipements,
     {
       onDelete: 'CASCADE'
     }
   )
-  bateauVoyageur: BateauVoyageur
+  @JoinTable({
+    name: 'bateau_voyageur_equipement',
+    joinColumn: {
+      name: 'equipement_id',
+      referencedColumnName: 'id'
+    },
+    inverseJoinColumn: {
+      name: 'bateau_voyageur_id',
+      referencedColumnName: 'id'
+    }
+  })
+  bateauVoyageurs: BateauVoyageur[]
 }

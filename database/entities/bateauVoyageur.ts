@@ -1,4 +1,4 @@
-import { ChildEntity, Column, OneToMany } from 'typeorm'
+import { ChildEntity, Column, ManyToMany, OneToMany } from 'typeorm'
 import { Bateau } from './bateau'
 import { Equipement } from './equipement'
 
@@ -13,6 +13,6 @@ export class BateauVoyageur extends Bateau {
   @Column({ type: 'float' })
   vitesse: number
 
-  @OneToMany(() => Equipement, (equipement) => equipement.bateauVoyageur)
+  @ManyToMany(() => Equipement, (equipement) => equipement.bateauVoyageurs)
   equipements: Equipement[]
 }

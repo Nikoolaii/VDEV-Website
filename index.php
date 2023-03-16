@@ -57,6 +57,12 @@ include_once __DIR__ . '/utils/router.php';
   $router->add('/admin/bateaux-categories/{id}/{lettre}/edit', __DIR__ . '/views/admin/bateaux-categories/edit.php');
   $router->add('/admin/bateaux-categories/{id}/{lettre}/delete', __DIR__ . '/views/admin/bateaux-categories/delete.php');
 
+  $router->add('/admin/equipements', __DIR__ . '/views/admin/equipements/index.php');
+  $router->add('/admin/equipements/create', __DIR__ . '/views/admin/equipements/create.php');
+  $router->add('/admin/equipements/{id}/{lettre}', __DIR__ . '/views/admin/equipements/view.php');
+  $router->add('/admin/equipements/{id}/{lettre}/edit', __DIR__ . '/views/admin/equipements/edit.php');
+  $router->add('/admin/equipements/{id}/{lettre}/delete', __DIR__ . '/views/admin/equipements/delete.php');
+
 
   $router->notFound(__DIR__ . '/views/404.php');
   echo "</div>";

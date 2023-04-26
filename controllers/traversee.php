@@ -3,11 +3,10 @@ include_once __DIR__ . "/../database/data-source.php";
 
 class Traversee
 {
-  public static function create(int $id, DateTime $date, string $heure, string $bateauId, string $liaisonId): bool
+  public static function create(DateTime $date, string $heure, string $bateauId, string $liaisonId): bool
   {
     $pdo = DataSource::getInstance();
-    $req = $pdo->prepare("INSERT INTO `traversee` (id, date, heure, bateau_id, liaison_id) VALUES (:id, :date, :heure, :bateau_id, :liaison_id)");
-    $req->bindValue(':id', $id, PDO::PARAM_INT);
+    $req = $pdo->prepare("INSERT INTO `traversee` (date, heure, bateau_id, liaison_id) VALUES (:date, :heure, :bateau_id, :liaison_id)");
     $req->bindValue(':date', $date->format('Y-m-d'), PDO::PARAM_STR);
     $req->bindValue(':heure', $heure, PDO::PARAM_STR);
     $req->bindValue(':bateau_id', $bateauId, PDO::PARAM_STR);

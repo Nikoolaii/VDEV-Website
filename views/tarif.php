@@ -10,6 +10,9 @@ $traversee = getTraverseeWithFullInformations($traverseeId);
 $date = new DateTime($traversee->date);
 $tarifs = getTarifsForTraversee($traverseeId);
 
+$error = false;
+$errorMessage = '';
+
 if (isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) && isset($_POST["adresse"]) && isset($_POST["codePostal"]) && isset($_POST["ville"])) {
   $nom = $_POST["nom"];
   $prenom = $_POST["prenom"];
@@ -26,10 +29,13 @@ if (isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) &&
       $quantites[$tarif->type_id] = $_POST["quantite-$tarif->type_id"];
   }
 
-  $reservationId = createReservation($nom, $prenom, $email, $adresse, $codePostal, $ville, $traverseeId, $quantites, $userId);
+  $result = createReservation($nom, $prenom, $email, $adresse, $codePostal, $ville, $traverseeId, $quantites, $userId);
 
-  if ($reservationId != null) {
-    header("Location: /reservation/$reservationId");
+  if ($result['error']) {
+    $error = true;
+    $errorMessage = $result['message'];
+  } else {
+    header("Location: /reservation/$result[reservation_id]");
   }
 }
 ?>
@@ -39,6 +45,16 @@ if (isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) &&
   <p class="text-xl"><?= $date->format('d/m/Y') ?> - <?= $traversee->heure ?></p>
 
   <form method="post" class="flex flex-col items-center gap-4">
+    <?php if ($error) : ?>
+      <p class="text-red-500">
+        <?php if ($errorMessage) : ?>
+          <?= $errorMessage ?>
+        <?php else : ?>
+          Une erreur est survenue lors de la création de votre réservation.
+        <?php endif; ?>
+      </p>
+    <?php endif; ?>
+
     <div>
       <label for="nom">Nom</label>
       <input type="text" id="nom" name="nom" value="<?= $user->{'last_name'} ?? '' ?>" required>

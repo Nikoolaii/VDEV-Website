@@ -129,15 +129,16 @@ function getTarifsForTraversee(int $traverseeId)
   return $req->fetchAll(PDO::FETCH_OBJ);
 }
 
-function createReservation(string $nom, string $prenom, string $email, string $adresse, string $codePostal, string $ville, int $traverseeId, array $quantites, ?int $userId): ?int
+function createReservation(string $nom, string $prenom, string $email, string $adresse, string $codePostal, string $ville, int $traverseeId, array $quantites, ?int $userId): array
 {
   $pdo = DataSource::getInstance();
-  $req = $pdo->prepare("INSERT INTO reservation (nom, prenom, adresse, code_postal, ville, traversee_id, user_id) VALUES (:nom, :prenom, :adresse, :code_postal, :ville, :traversee_id, :user_id)");
+  $req = $pdo->prepare("INSERT INTO reservation (nom, prenom, adresse, code_postal, ville, email, traversee_id, user_id) VALUES (:nom, :prenom, :adresse, :code_postal, :ville, :email, :traversee_id, :user_id)");
   $req->bindValue(':nom', $nom, PDO::PARAM_STR);
   $req->bindValue(':prenom', $prenom, PDO::PARAM_STR);
   $req->bindValue(':adresse', $adresse, PDO::PARAM_STR);
   $req->bindValue(':code_postal', $codePostal, PDO::PARAM_STR);
   $req->bindValue(':ville', $ville, PDO::PARAM_STR);
+  $req->bindValue(':email', $email, PDO::PARAM_STR);
   $req->bindValue(':traversee_id', $traverseeId, PDO::PARAM_INT);
   $req->bindValue(':user_id', $userId, PDO::PARAM_INT);
   $result = $req->execute();
@@ -148,33 +149,47 @@ function createReservation(string $nom, string $prenom, string $email, string $a
 
   $reservationId = $pdo->lastInsertId();
 
+  $quantitesId = [];
+  $errorQuantites = false;
+  $errorMessage = '';
+
   foreach ($quantites as $typeId => $quantite) {
     $req = $pdo->prepare("INSERT INTO reservations_types (reservation_id, type_id, quantite) VALUES (:reservation_id, :type_id, :quantite)");
     $req->bindValue(':reservation_id', $reservationId, PDO::PARAM_INT);
     $req->bindValue(':type_id', $typeId, PDO::PARAM_INT);
     $req->bindValue(':quantite', $quantite, PDO::PARAM_INT);
-    $result = $req->execute();
 
-    if (!$result) {
-      return null;
-    }
-  }
-
-  if ($userId == null) {
-    $req = $pdo->prepare("SELECT id FROM user WHERE email = :email");
-    $req->bindValue(':email', $email, PDO::PARAM_STR);
-    $req->execute();
-    $user = $req->fetch(PDO::FETCH_OBJ);
-
-    if ($user != false) {
-      $req = $pdo->prepare("UPDATE reservation SET user_id = :user_id WHERE id = :reservation_id");
-      $req->bindValue(':user_id', $user->{'id'}, PDO::PARAM_INT);
-      $req->bindValue(':reservation_id', $reservationId, PDO::PARAM_INT);
+    try {
       $result = $req->execute();
+      $quantitesId[] = $pdo->lastInsertId();
+    } catch (PDOException $e) {
+      $errorQuantites = true;
+      $errorMessage = $e->getCode() === '45000' ? 'La quantité demandée est supérieure à la capacité maximale' : 'Une erreur est survenue';
+      break;
     }
   }
 
-  return $reservationId;
+  if ($errorQuantites) {
+    foreach ($quantitesId as $quantiteId) {
+      $req = $pdo->prepare("DELETE FROM reservations_types WHERE id = :id");
+      $req->bindValue(':id', $quantiteId, PDO::PARAM_INT);
+      $req->execute();
+    }
+
+    $req = $pdo->prepare("DELETE FROM reservation WHERE id = :id");
+    $req->bindValue(':id', $reservationId, PDO::PARAM_INT);
+    $req->execute();
+
+    return [
+      'error' => true,
+      'message' => $errorMessage
+    ];
+  }
+
+  return [
+    'error' => false,
+    'reservation_id' => $reservationId
+  ];
 }
 
 function getReservation(int $reservationId)

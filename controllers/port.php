@@ -3,11 +3,10 @@ include_once __DIR__ . "/../database/data-source.php";
 
 class Port
 {
-  public static function create(int $id, string $nom): bool
+  public static function create(string $nom): bool
   {
     $pdo = DataSource::getInstance();
-    $req = $pdo->prepare("INSERT INTO `port` (id, nom) VALUES (:id, :nom)");
-    $req->bindValue(':id', $id, PDO::PARAM_INT);
+    $req = $pdo->prepare("INSERT INTO `port` (nom) VALUES (:nom)");
     $req->bindValue(':nom', $nom, PDO::PARAM_STR);
     return $req->execute();
   }

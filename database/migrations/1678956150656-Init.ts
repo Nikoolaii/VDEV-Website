@@ -139,42 +139,43 @@ export class Init1678956150656 implements MigrationInterface {
             on reservations_types
             for each row
         begin
-            DECLARE v_traversee_id integer;
-            DECLARE v_categorie_lettre varchar(1);
-            DECLARE v_capacite integer;
-            DECLARE v_capacite_max integer;
-        
-            SELECT r.traversee_id
-            INTO v_traversee_id
-                FROM reservations_types
-                INNER JOIN reservation r on reservations_types.reservation_id = r.id
-                WHERE reservations_types.reservation_id = new.reservation_id;
-        
-            SELECT ty.categorie_lettre
-            INTO v_categorie_lettre
-                FROM reservations_types
-                INNER JOIN type ty on reservations_types.type_id = ty.id
-                WHERE reservations_types.reservation_id = new.reservation_id;
-        
-            SELECT SUM(quantite)
-            INTO v_capacite
-                FROM reservations_types
-                INNER JOIN reservation r on reservations_types.reservation_id = r.id
-                INNER JOIN type ty on reservations_types.type_id = ty.id
-                INNER JOIN traversee tr on r.traversee_id = tr.id
-                INNER JOIN categorie c on ty.categorie_lettre = c.lettre
-                WHERE tr.id = v_traversee_id AND ty.categorie_lettre = v_categorie_lettre;
-        
-            SELECT capacite_max
-            INTO v_capacite_max
-                FROM bateaux_categories
-                INNER JOIN traversee t on bateaux_categories.bateau_id = t.bateau_id
-                WHERE id = v_traversee_id AND categorie_lettre = v_categorie_lettre;
-        
-            IF v_capacite + new.quantite > v_capacite_max THEN
-                SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'La capacité maximale de la catégorie a été atteinte pour cette traversée.';
-            END IF;
+          DECLARE v_traversee_id integer;
+          DECLARE v_categorie_lettre varchar(1);
+          DECLARE v_capacite integer;
+          DECLARE v_capacite_max integer;
+          DECLARE v_total integer;
+      
+          SELECT traversee_id
+          INTO v_traversee_id
+              FROM reservation
+              WHERE id = new.reservation_id;
+      
+          SELECT categorie_lettre
+          INTO v_categorie_lettre
+              FROM type
+              WHERE id = 1;
+      
+          SELECT SUM(quantite)
+          INTO v_capacite
+              FROM reservations_types
+              INNER JOIN reservation r on reservations_types.reservation_id = r.id
+              INNER JOIN type ty on reservations_types.type_id = ty.id
+              INNER JOIN traversee tr on r.traversee_id = tr.id
+              INNER JOIN categorie c on ty.categorie_lettre = c.lettre
+              WHERE tr.id = v_traversee_id AND ty.categorie_lettre = v_categorie_lettre;
+      
+          SELECT capacite_max
+          INTO v_capacite_max
+              FROM bateaux_categories
+              INNER JOIN traversee t on bateaux_categories.bateau_id = t.bateau_id
+              WHERE id = v_traversee_id AND categorie_lettre = v_categorie_lettre;
+      
+          SET v_total = v_capacite + new.quantite;
+      
+          IF v_total > v_capacite_max THEN
+              SIGNAL SQLSTATE '45000'
+              SET MESSAGE_TEXT = 'La capacité maximale de la catégorie a été atteinte pour cette traversée.';
+          END IF;
         end;
     `)
   }

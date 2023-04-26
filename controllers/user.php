@@ -15,13 +15,14 @@ class User
     return $req->execute();
   }
 
-  public static function update(int $id, string $email, string $password, string $firstName, string $lastName, bool $admin): bool
+  public static function update(int $id, string $email, ?string $password, string $firstName, string $lastName, bool $admin): bool
   {
     $pdo = DataSource::getInstance();
     $req = $pdo->prepare("UPDATE `user` SET email = :email, password = :password, first_name = :firstName, last_name = :lastName, admin = :admin WHERE id = :id");
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->bindValue(':email', $email, PDO::PARAM_STR);
-    $req->bindValue(':password', password_hash($password, PASSWORD_BCRYPT), PDO::PARAM_STR);
+    if (!is_null($password))
+      $req->bindValue(':password', password_hash($password, PASSWORD_BCRYPT), PDO::PARAM_STR);
     $req->bindValue(':firstName', $firstName, PDO::PARAM_STR);
     $req->bindValue(':lastName', $lastName, PDO::PARAM_STR);
     $req->bindValue(':admin', $admin, PDO::PARAM_BOOL);
@@ -59,6 +60,6 @@ class User
     $pdo = DataSource::getInstance();
     $req = $pdo->prepare("SELECT * FROM `user`");
     $req->execute();
-    return $req->fetchAll(PDO::FETCH_OBJ, "User");
+    return $req->fetchAll(PDO::FETCH_OBJ);
   }
 }

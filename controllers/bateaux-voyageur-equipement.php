@@ -3,7 +3,7 @@ include_once __DIR__ . "/../database/data-source.php";
 
 class BateauVoyageurEquipement
 {
-  public static function create(int $equipementId, int $bateauId): bool
+  public static function create(int $bateauId, int $equipementId): bool
   {
     $pdo = DataSource::getInstance();
     $req = $pdo->prepare("INSERT INTO `bateau_voyageur_equipement` (equipement_id, bateau_voyageur_id) VALUES (:equipement_id, :bateau_voyageur_id)");
@@ -12,7 +12,7 @@ class BateauVoyageurEquipement
     return $req->execute();
   }
 
-  public static function delete(int $equipementId, int $bateauId): bool
+  public static function delete(int $bateauId, int $equipementId): bool
   {
     $pdo = DataSource::getInstance();
     $req = $pdo->prepare("DELETE FROM `bateau_voyageur_equipement` WHERE equipement_id = :equipement_id AND bateau_voyageur_id = :bateau_voyageur_id");
@@ -21,7 +21,7 @@ class BateauVoyageurEquipement
     return $req->execute();
   }
 
-  public static function findOne(int $equipementId, int $bateauId): mixed
+  public static function findOne(int $bateauId, int $equipementId): mixed
   {
     $pdo = DataSource::getInstance();
     $req = $pdo->prepare("SELECT * FROM `bateau_voyageur_equipement` WHERE equipement_id = :equipement_id AND bateau_voyageur_id = :bateau_voyageur_id");

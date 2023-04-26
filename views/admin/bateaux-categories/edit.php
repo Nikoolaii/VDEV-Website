@@ -28,7 +28,7 @@ if (isset($_POST["edit"])) {
 } else {
   $bc = BateauxCategories::findOne($id, $lettre);
   if (!$bc) {
-    header("Location: /admin/categories");
+    header("Location: /admin/bateaux-categories");
   }
 }
 ?>

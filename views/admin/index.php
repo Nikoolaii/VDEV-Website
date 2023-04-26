@@ -13,6 +13,10 @@ $links = [
     "link" => "/admin/bateaux"
   ],
   [
+    "name" => "Bateaux-Voyageur-Equipements",
+    "link" => "/admin/bateaux-voyageur-equipements"
+  ],
+  [
     "name" => "Bateaux-Catégories",
     "link" => "/admin/bateaux-categories"
   ],
@@ -53,12 +57,8 @@ $links = [
     "link" => "/admin/secteurs"
   ],
   [
-    "name" => "Secteurs-Liaisons",
-    "link" => "/admin/secteurs-liaisons"
-  ],
-  [
-    "name" => "Secteurs-Types",
-    "link" => "/admin/secteurs-types"
+    "name" => "Traversées",
+    "link" => "/admin/traversees"
   ],
   [
     "name" => "Types",

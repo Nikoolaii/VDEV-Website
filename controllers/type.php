@@ -3,13 +3,12 @@ include_once __DIR__ . "/../database/data-source.php";
 
 class Type
 {
-  public static function create(int $id, string $libelle, string $categorieLettre): bool
+  public static function create(string $libelle, string $categorieLettre): bool
   {
     $pdo = DataSource::getInstance();
-    $req = $pdo->prepare("INSERT INTO `type` (id, libelle, categorie_lettre) VALUES (:id, :libelle, :categorie_lettre)");
-    $req->bindValue(':id', $id, PDO::PARAM_INT);
+    $req = $pdo->prepare("INSERT INTO `type` (libelle, categorie_lettre) VALUES (:libelle, :categorie_lettre)");
     $req->bindValue(':libelle', $libelle, PDO::PARAM_STR);
-    $req->bindValue(':categorie_lettre', $categorieLettre, PDO::PARAM_INT);
+    $req->bindValue(':categorie_lettre', $categorieLettre, PDO::PARAM_STR);
     return $req->execute();
   }
 
@@ -19,7 +18,7 @@ class Type
     $req = $pdo->prepare("UPDATE `type` SET libelle = :libelle, categorie_lettre = :categorie_lettre WHERE id = :id");
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->bindValue(':libelle', $libelle, PDO::PARAM_STR);
-    $req->bindValue(':categorie_lettre', $categorieLettre, PDO::PARAM_INT);
+    $req->bindValue(':categorie_lettre', $categorieLettre, PDO::PARAM_STR);
     return $req->execute();
   }
 

@@ -5,8 +5,6 @@ define("PASSWORD_REGEX", "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{12,}$/");
 define("EMAIL_REGEX", "/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/");
 
 if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email']) && isset($_POST['password'])) {
-  var_dump($_POST["email"]);
-  var_dump(preg_match(EMAIL_REGEX, $_POST["email"]));
   if (!preg_match(PASSWORD_REGEX, $_POST["password"]) || !preg_match(EMAIL_REGEX, $_POST["email"])) {
     $error = true;
   } else {
